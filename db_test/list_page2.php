@@ -67,15 +67,23 @@ $total_page = ceil($total_rec / $numpp);  // 計算總頁數
 // 分頁之超連結
 $navigator = "";
 
-$exp = 3;  // 前後展開的超連結頁數
-$page_begin = ($page-$exp<0) ? '1' : ($page - $exp);
+$exp = 5;  // 前後展開的超連結頁數
+$page_begin = ($page-$exp<=0) ? '1' : ($page - $exp);
 $page_end = ($page+$exp>$total_page) ? $total_page : ($page + $exp);
+$prefix1 = ($page_begin>1) ? '… ' : '';  // 最前面加的文字
+$prefix2 = ($page_end<$total_page) ? ' …' : '';  // 最後面加的文字
 
-for($i=$page_begin; $i<=$page_end; $i++)
+$navigator .= $prefix1;
+for($i=$page_begin; $i<$page; $i++)
 {
-   $navigator .= "<a href=\"?page=" . $i . "\">" . $i . "</a>&nbsp;";
+   $navigator .= '<a href="?page=' . $i . '">' . $i . '</a>&nbsp;';
 }
-
+$navigator .=  $i . ' ';
+for($i=$page+1; $i<=$page_end; $i++)
+{
+   $navigator .= '<a href="?page=' . $i . '">' . $i . '</a>&nbsp;';
+}
+$navigator .= $prefix2;
 
 /*
 for($i=1; $i<=$page-1; $i++)
@@ -109,7 +117,7 @@ $html = <<< HEREDOC
 <body>
 <p><a href="index.php">回首頁</a></p>
 <h2 align="center">共有 $total_rec 筆記錄</h2>
-{$navigator}
+<p align="center">{$navigator}</p>
 <table border="0" align="center">
    <tr>
       <td colspan="30">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pages: {$page} / {$total_page} &nbsp;&nbsp;&nbsp;
